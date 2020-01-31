@@ -16,17 +16,21 @@ buildscript {
 }
 
 jar {
+    manifest {
+       attributes(
+        'Main-Class': 'hello.Application'
+       )
+    }
     baseName = 'restapp'
     version =  '0.1.0'
 }
-
 
 springBoot {
     // Allows us to run the jar directly from the command line, e.g. ./springboot-0.0.1.jar
     executable = true
     // Excludes the devtools package from production builds
     excludeDevtools = true
-    
+
     // Set values for variable placeholders
     // in the default launch script.
     embeddedLaunchScriptProperties =
@@ -38,9 +42,8 @@ repositories {
     jcenter()
 }
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
-
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web"){
@@ -51,7 +54,6 @@ dependencies {
     compile 'org.apache.tomcat.embed:tomcat-embed-logging-juli:7.0.59'
     compile 'org.apache.tomcat.embed:tomcat-embed-websocket:7.0.59'
     compile("org.springframework.boot:spring-boot-starter-actuator")
-    
     compile 'com.google.api-client:google-api-client:1.22.0'
     compile 'com.google.oauth-client:google-oauth-client:1.22.0'
     compile 'com.google.http-client:google-http-client-jackson2:1.22.0'
@@ -62,38 +64,62 @@ dependencies {
     compile 'joda-time:joda-time:2.9.4'
     compile 'com.google.code.gson:gson:2.7'
     compile group: 'postgresql', name: 'postgresql', version: '9.1-901-1.jdbc4'
-    
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('com.jayway.jsonpath:json-path')
+    compile 'javax.xml.bind:jaxb-api:2.3.0'
 }
 
 task fatJar(type: Jar) {
-  manifest {
-    attributes(
-      'Main-Class': 'hello.Application'
-    )
-  }
-  baseName = 'restapp' + '-all'
+     manifest {
+        attributes(
+           'Main-Class': 'hello.Application'
+        )
+    }
+    baseName = 'restapp' + '-all'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.3'
+wrapper {
+    gradleVersion = '5.0'
+   //distributionUrl = distributionUrl.replace("bin", "all")
 }
 
-task packDeb(type: Deb, dependsOn: fatJar) {
+task packDeb(type: Deb, dependsOn: bootRepackage) {
     packageName = 'restapp'
     version = 1.0
 
    requires('openjdk-7-jre-headless')
      from('build/libs/.') {
      into "/opt/restapp"
-  }
+    }
+	
+   postInstall = file('pkg_scripts/deb/postInstall.sh')
+  
+    from(jar.outputs.files) {
+        into 'lib'
+    }
+    from('build/scripts') {
+        into 'bin'
+        fileMode = 0550
+    }
+    from(configurations.runtime) {
+        into 'lib'
+    }
+}
+task packRpm(type: Rpm, dependsOn: bootRepackage) {
+    packageName = 'restapp'
+    version = '1.0'
+    release = '1'
+    os = LINUX
 
-  preInstall = file('pkg_scripts/preInstall.sh')
-  postInstall = file('pkg_scripts/postInstall.sh')
-  postUninstall = file('pkg_scripts/postUninstall.sh')
+   requires('java')
+     from('build/libs/.') {
+     into "/opt/restapp"
+  }
+    postInstall = file('pkg_scripts/rpm/postInstall.sh')
+    preUninstall = file('pkg_scripts/rpm/preUninstall.sh')
+    postUninstall = file('pkg_scripts/rpm/postUninstall.sh')
 
     from(jar.outputs.files) {
         into 'lib'
