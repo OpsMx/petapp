@@ -1,4 +1,5 @@
 {
+"default": [{
   "appConfig": {},
   "keepWaitingPipelines": false,
   "lastModifiedBy": "admin",
@@ -132,4 +133,5 @@
   ],
   "triggers": [],
   "updateTs": "1594968442000"
+}]
 }
