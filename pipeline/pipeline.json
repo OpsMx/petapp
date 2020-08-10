@@ -6,6 +6,7 @@
   "lastModifiedBy": "admin",
   "limitConcurrent": true,
   "spelEvaluator": "v4",
+  "name": "wait pipeline",
   "stages": [
     {
       "isNew": true,
