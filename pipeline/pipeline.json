@@ -1,137 +1,23 @@
 {
-"default": [{
-  "appConfig": {},
+"default": [
+{
+  "isNew": true,
   "keepWaitingPipelines": false,
   "lastModifiedBy": "admin",
   "limitConcurrent": true,
+  "spelEvaluator": "v4",
   "stages": [
     {
-      "account": "target-livemanifest",
-      "cloudProvider": "kubernetes",
-      "manifests": [
-        {
-          "apiVersion": "v1",
-          "data": {
-            "runcli.sh": "#!/bin/bash\nspin --version\njq --version\ngit --version\ngatendpoint=https://demo.opsmx.com/gate\n\ngit clone  https://\"$gitusername\":\"$gitpassword\"@github.com/OpsMx/spin-demo.git\ncd spin-demo/pipeline-template\nls -ltr\n\nfile=DeployToK8s.json\nspin --config $HOME/.spin/config --gate-endpoint $gatendpoint --insecure pt save --file $file \necho \" created pipeline template $file\"\n#sleep 30d\n"
-          },
-          "kind": "ConfigMap",
-          "metadata": {
-            "annotations": {
-              "strategy.spinnaker.io/versioned": "false"
-            },
-            "name": "cliscript"
-          }
-        }
-      ],
-      "moniker": {
-        "app": "default"
-      },
-      "name": "cliscript",
-      "namespaceOverride": "spinterra",
+      "isNew": true,
+      "name": "Wait",
       "refId": "1",
       "requisiteStageRefIds": [],
-      "skipExpressionEvaluation": false,
-      "source": "text",
-      "trafficManagement": {
-        "enabled": false,
-        "options": {
-          "enableTraffic": false,
-          "services": []
-        }
-      },
-      "type": "deployManifest"
-    },
-    {
-      "account": "target-livemanifest",
-      "cloudProvider": "kubernetes",
-      "manifests": [
-        {
-          "apiVersion": "batch/v1",
-          "kind": "Job",
-          "metadata": {
-            "name": "spincli",
-            "namespace": "spinterra"
-          },
-          "spec": {
-            "backoffLimit": 0,
-            "template": {
-              "spec": {
-                "containers": [
-                  {
-                    "command": [
-                      "/usr/local/src/runcli.sh"
-                    ],
-                    "env": [
-                      {
-                        "name": "gitusername",
-                        "valueFrom": {
-                          "secretKeyRef": {
-                            "key": "gitusername",
-                            "name": "gitsecret"
-                          }
-                        }
-                      },
-                      {
-                        "name": "gitpassword",
-                        "valueFrom": {
-                          "secretKeyRef": {
-                            "key": "gitpassword",
-                            "name": "gitsecret"
-                          }
-                        }
-                      }
-                    ],
-                    "image": "opsmxdev/spincli:v1",
-                    "name": "spincli",
-                    "volumeMounts": [
-                      {
-                        "mountPath": "/usr/local/src",
-                        "name": "initscript"
-                      }
-                    ]
-                  }
-                ],
-                "imagePullSecrets": [
-                  {
-                    "name": "oes-repo"
-                  }
-                ],
-                "restartPolicy": "Never",
-                "volumes": [
-                  {
-                    "configMap": {
-                      "defaultMode": 421,
-                      "name": "cliscript"
-                    },
-                    "name": "initscript"
-                  }
-                ]
-              }
-            }
-          }
-        }
-      ],
-      "moniker": {
-        "app": "default"
-      },
-      "name": "Deploy (Manifest)",
-      "refId": "7",
-      "requisiteStageRefIds": [
-        "1"
-      ],
-      "skipExpressionEvaluation": false,
-      "source": "text",
-      "trafficManagement": {
-        "enabled": false,
-        "options": {
-          "enableTraffic": false,
-          "services": []
-        }
-      },
-      "type": "deployManifest"
+      "type": "wait",
+      "waitTime": 30
     }
   ],
   "triggers": [],
-  "updateTs": "1594968442000"
-}]
+  "updateTs": "1597039593000"
+}
+]
 }
