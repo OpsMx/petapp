@@ -1,5 +1,5 @@
 {
-"default": [
+"nsentest": [
 {
   "isNew": true,
   "keepWaitingPipelines": false,
