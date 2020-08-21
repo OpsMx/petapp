@@ -19,6 +19,26 @@
   ],
   "triggers": [],
   "updateTs": "1597039593000"
+},
+  {
+  "isNew": true,
+  "keepWaitingPipelines": false,
+  "lastModifiedBy": "admin",
+  "limitConcurrent": true,
+  "spelEvaluator": "v4",
+  "name": "second pipeline",
+  "stages": [
+    {
+      "isNew": true,
+      "name": "Wait",
+      "refId": "1",
+      "requisiteStageRefIds": [],
+      "type": "wait",
+      "waitTime": 30
+    }
+  ],
+  "triggers": [],
+  "updateTs": "1597039593000"
 }
 ]
 }
