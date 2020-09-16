@@ -40,6 +40,19 @@
       "requisiteStageRefIds": [],
       "type": "wait",
       "waitTime": 30
+    },
+    {
+      "failPipeline": true,
+      "instructions": "This is a manual judgement stage",
+      "isNew": true,
+      "judgmentInputs": [],
+      "name": "Manual Judgment",
+      "notifications": [],
+      "refId": "2",
+      "requisiteStageRefIds": [
+        "1"
+      ],
+      "type": "manualJudgment"
     }
   ],
   "triggers": [],
