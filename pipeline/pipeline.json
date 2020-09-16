@@ -7,6 +7,11 @@
   "limitConcurrent": true,
   "spelEvaluator": "v4",
   "name": "wait pipeline",
+  "locked": {
+    "allowUnlockUi": true,
+    "description": "",
+    "ui": true
+  },
   "stages": [
     {
       "isNew": true,
@@ -14,7 +19,7 @@
       "refId": "1",
       "requisiteStageRefIds": [],
       "type": "wait",
-      "waitTime": 30
+      "waitTime": 60
     }
   ],
   "triggers": [],
